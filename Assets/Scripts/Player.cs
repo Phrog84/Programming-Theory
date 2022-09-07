@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     private float _speedMulti = 2f;
     private Vector3 _startPos;
 
+    public int fire; // delete
+
     public GameObject _laserPrefab;
     public GameObject _tripShotPrefab;
     public GameObject _sheild;
