@@ -4,22 +4,32 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private string hor = "Horizontal";
-    private string ver = "Vertical";
+    private SpawnPooler spawnPooler;
+
+    private readonly string hor = "Horizontal";
+    private readonly string ver = "Vertical";
 
     public float speed = 8f;
-    /*public float Speed
-    {
-        get { return Speed; }
-        set { Speed = value; }
-    }*/
-
+    
     private float _xClamp = 9;
     private float _yClamp = 5;
+
+    public GameObject playerLaserPrefab;
+    public GameObject playerLaserOrigin;
+    public int poolNumber;
+
+    public float canFire = -.5f;
+    public float fireRate = .5f;
+
+    private void Start()
+    {
+        spawnPooler = SpawnPooler.spawnPooler;
+    }
 
     private void FixedUpdate()
     {
         MoveSpaceShip();
+        FireLaser();
     }
 
     private void MoveSpaceShip()
@@ -34,8 +44,49 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp), Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
     }
 
-    /*public void ShipSpeed(float speed)
+    private void FireLaser()
     {
-        Speed = speed;
-    }*/
+        if (Input.GetKey(KeyCode.Space) && Time.time > canFire)
+        {
+            LaserDamage();
+        }
+    }
+
+    private void LaserDamage()
+    {
+        canFire = Time.time + fireRate;
+        playerLaserPrefab = spawnPooler.GetPooledLaser(poolNumber);
+        playerLaserPrefab.transform.position = playerLaserOrigin.transform.position;
+        playerLaserPrefab.SetActive(true);
+    }
+
+    public void ShipSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
+
+    public void ShipLaser(GameObject laserPrefab)
+    {
+        playerLaserPrefab = laserPrefab;
+    }
+
+    public void ShipLaserOrgiin(GameObject laserOrigin)
+    {
+        playerLaserOrigin = laserOrigin;
+    }
+
+    public void ShipLaserPool(int laserNumber)
+    {
+        poolNumber = laserNumber;
+    }
+
+    public void ShipCanFire(float newCanfire)
+    {
+        canFire = newCanfire;
+    }
+
+    public void ShipFireRate(float newFireRate)
+    {
+        fireRate = newFireRate;
+    }
 }

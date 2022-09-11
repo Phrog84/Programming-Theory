@@ -4,35 +4,45 @@ using UnityEngine;
 
 public class SpaceShip : MonoBehaviour
 {
-    [SerializeField]
-    private float speed;
+    public PlayerController playerController;
 
-    [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private GameObject _laserOrigin;
+    public float speed;
 
-    [SerializeField]
-    private float _canFire = -.5f;
-    [SerializeField]
-    private float _fireRate = .5f;
-    
-    public virtual void FireLaser()
+    public GameObject laserPrefab;
+    public GameObject laserOrigin;
+
+    public float canFire;
+    public float fireRate;
+
+    public int poolNumber;
+
+    public virtual void SetShipSpeed()
     {
-        if (Input.GetKey(KeyCode.Space) && Time.time > _canFire)
-        {
-            LaserDamage();
-        }
+        playerController.ShipSpeed(speed);
     }
 
-    public virtual void LaserDamage()
+    public virtual void SetShipLaserPrefab()
     {
-        Instantiate(_laserPrefab, _laserOrigin.transform.position, Quaternion.identity);
-        _canFire = Time.time + _fireRate;
+        playerController.ShipLaser(laserPrefab);
     }
 
-    /*public virtual void SetShipSpeed()
+    public virtual void SetShipLaserOrgin()
     {
-        GetComponent<PlayerController>().ShipSpeed(speed);
-    }*/
+        playerController.ShipLaserOrgiin(laserOrigin);
+    }
+
+    public virtual void SetPoolNumber()
+    {
+        playerController.ShipLaserPool(poolNumber);
+    }
+
+    public virtual void SetShipCanFire()
+    {
+        playerController.ShipCanFire(canFire);
+    }
+
+    public virtual void SetShipFireRate()
+    {
+        playerController.ShipFireRate(fireRate);
+    }
 }
