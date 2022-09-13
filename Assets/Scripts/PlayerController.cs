@@ -13,12 +13,15 @@ public class PlayerController : MonoBehaviour
     public GameObject spaceShip;
     private Vector3 center;
 
-    public float speed = 8f;
-    
-    private float _xClamp = 9;
-    private float _yClamp = 5;
+    public float shipSpeed = 8f;
+    private readonly float tiltSpeed = .4f;
+    private readonly int tiltDegree = 45;
+
+    private readonly float _xClamp = 9;
+    private readonly float _yClamp = 5;
 
     public float tiltDirection = 45f;
+    public bool shipMoving = false;
 
 
     public GameObject playerLaserPrefab;
@@ -31,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         spawnPooler = SpawnPooler.spawnPooler;
+        shipMoving = false;
     }
 
     private void FixedUpdate()
@@ -39,38 +43,50 @@ public class PlayerController : MonoBehaviour
         FireLaser();
     }
 
+    public void GameStarted()
+    {
+        shipMoving = true;
+    }
+
     private void MoveSpaceShip()
     {
-        float horizontalInput = Input.GetAxisRaw(hor);
-        float verticalInput = Input.GetAxisRaw(ver);
-
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        Quaternion shipCenter = Quaternion.Euler(0, 0, 0);
-        Quaternion shipTiltRight = Quaternion.Euler(0, 0, tiltDirection);
-        Quaternion shipTiltLeft = Quaternion.Euler(0, 0, -tiltDirection);
-
-        transform.Translate(speed * Time.deltaTime * direction);
-
-        if (horizontalInput == 1)
+        if (shipMoving == true)
         {
-            spaceShip.transform.rotation = Quaternion.Lerp(shipCenter, shipTiltRight, 1);
+            float horizontalInput = Input.GetAxisRaw(hor);
+            float verticalInput = Input.GetAxisRaw(ver);
+
+            Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
+            Quaternion shipCenter = Quaternion.Euler(0, 0, 0);
+            Quaternion shipTiltRight = Quaternion.Euler(0, -tiltDirection, 0);
+            Quaternion shipTiltLeft = Quaternion.Euler(0, tiltDirection, 0);
+
+            transform.Translate(shipSpeed * Time.deltaTime * direction);
+
+            if (horizontalInput == 1)
+            {
+                spaceShip.transform.rotation = Quaternion.RotateTowards(spaceShip.transform.rotation, shipTiltRight, tiltDegree);
+            }
+            else if (horizontalInput == -1)
+            {
+                spaceShip.transform.rotation = Quaternion.RotateTowards(spaceShip.transform.rotation, shipTiltLeft, tiltDegree);
+            }
+            else
+            {
+                spaceShip.transform.rotation = Quaternion.Slerp(spaceShip.transform.rotation, shipCenter, tiltSpeed);
+            }
+
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp), Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
         }
-        else if (horizontalInput == -1)
-        {
-            spaceShip.transform.rotation = Quaternion.Slerp(shipCenter, shipTiltLeft, 1);
-        }
-        else
-        {
-            spaceShip.transform.rotation = shipCenter;
-        }
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp), Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
     }
 
     private void FireLaser()
     {
-        if (Input.GetKey(KeyCode.Space) && Time.time > canFire)
+        if (shipMoving == true)
         {
-            LaserDamage();
+            if (Input.GetKey(KeyCode.Space) && Time.time > canFire)
+            {
+                LaserDamage();
+            }
         }
     }
 
@@ -84,7 +100,7 @@ public class PlayerController : MonoBehaviour
 
     public void ShipSpeed(float newSpeed)
     {
-        speed = newSpeed;
+        shipSpeed = newSpeed;
     }
 
     public void ShipLaser(GameObject laserPrefab)

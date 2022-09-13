@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private UIManager uIManager;
+    [SerializeField]
+    private PlayerController playerController;
+
+    [SerializeField]
+    private bool gameStarted = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameStarted = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void GameStarted()
     {
-        
+        gameStarted = true;
+        uIManager.GameStarted();
+        playerController.GameStarted();
     }
 }
