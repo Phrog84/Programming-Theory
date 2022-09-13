@@ -9,10 +9,17 @@ public class PlayerController : MonoBehaviour
     private readonly string hor = "Horizontal";
     private readonly string ver = "Vertical";
 
+
+    public GameObject spaceShip;
+    private Vector3 center;
+
     public float speed = 8f;
     
     private float _xClamp = 9;
     private float _yClamp = 5;
+
+    public float tiltDirection = 45f;
+
 
     public GameObject playerLaserPrefab;
     public GameObject playerLaserOrigin;
@@ -38,8 +45,25 @@ public class PlayerController : MonoBehaviour
         float verticalInput = Input.GetAxisRaw(ver);
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
+        Quaternion shipCenter = Quaternion.Euler(0, 0, 0);
+        Quaternion shipTiltRight = Quaternion.Euler(0, 0, tiltDirection);
+        Quaternion shipTiltLeft = Quaternion.Euler(0, 0, -tiltDirection);
 
-        transform.Translate(direction * speed * Time.fixedDeltaTime);
+        transform.Translate(speed * Time.deltaTime * direction);
+        // spaceShip.transform.rotation = Quaternion.Slerp(shipCenter, (shipTiltRight * horizontalInput), 1));
+
+        if (horizontalInput == 1)
+        {
+            spaceShip.transform.rotation = Quaternion.Lerp(shipCenter, shipTiltRight, 1);
+        }
+        else if (horizontalInput == -1)
+        {
+            spaceShip.transform.rotation = Quaternion.Slerp(shipCenter, shipTiltLeft, 1);
+        }
+        else
+        {
+            spaceShip.transform.rotation = shipCenter;
+        }
 
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp), Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
     }
