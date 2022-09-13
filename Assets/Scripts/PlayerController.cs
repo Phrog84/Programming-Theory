@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
         {
             spaceShip.transform.rotation = shipCenter;
         }
-
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp), Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
     }
 
