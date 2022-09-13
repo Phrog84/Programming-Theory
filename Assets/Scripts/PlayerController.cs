@@ -50,7 +50,6 @@ public class PlayerController : MonoBehaviour
         Quaternion shipTiltLeft = Quaternion.Euler(0, 0, -tiltDirection);
 
         transform.Translate(speed * Time.deltaTime * direction);
-        // spaceShip.transform.rotation = Quaternion.Slerp(shipCenter, (shipTiltRight * horizontalInput), 1));
 
         if (horizontalInput == 1)
         {
