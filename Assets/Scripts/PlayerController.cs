@@ -4,32 +4,49 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [System.Serializable]
+    public class SpaceShips
+    {
+        public string tag;
+        public int poolNumber;
+        public float speed;
+        public GameObject laserPrefab;
+        public GameObject laserOrigin;
+        public float canFire;
+        public float fireRate;
+    }
+
+    public List<SpaceShips> spaceShipsList;
+    public List<GameObject> activeSpaceShips; 
+
+    public int poolNumber;
+    public float shipSpeed;
+    public GameObject playerLaserPrefab;
+    public GameObject playerLaserOrigin;
+    public float canFire;
+    public float fireRate;
+
     private SpawnPooler spawnPooler;
 
     private readonly string hor = "Horizontal";
     private readonly string ver = "Vertical";
 
+    public int currentShip;
+    private readonly int firstShip = 0;
+    private readonly int lastShip = 3;
 
     public GameObject spaceShip;
-    private Vector3 center;
+    private readonly Vector3 center;
 
-    public float shipSpeed = 8f;
     private readonly float tiltSpeed = .4f;
     private readonly int tiltDegree = 45;
-
     private readonly float _xClamp = 9;
     private readonly float _yClamp = 5;
+    private float tiltDirection = 45f;
+    private float canSwitch = -.1f;
+    private float switchRate = .5f;
 
-    public float tiltDirection = 45f;
     public bool shipMoving = false;
-
-
-    public GameObject playerLaserPrefab;
-    public GameObject playerLaserOrigin;
-    public int poolNumber;
-
-    public float canFire = -.5f;
-    public float fireRate = .5f;
 
     private void Start()
     {
@@ -37,10 +54,11 @@ public class PlayerController : MonoBehaviour
         shipMoving = false;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         MoveSpaceShip();
         FireLaser();
+        NewSpaceShip();
     }
 
     public void GameStarted()
@@ -64,18 +82,22 @@ public class PlayerController : MonoBehaviour
 
             if (horizontalInput == 1)
             {
-                spaceShip.transform.rotation = Quaternion.RotateTowards(spaceShip.transform.rotation, shipTiltRight, tiltDegree);
+                spaceShip.transform.rotation = Quaternion.RotateTowards(spaceShip.transform.rotation,
+                    shipTiltRight, tiltDegree);
             }
             else if (horizontalInput == -1)
             {
-                spaceShip.transform.rotation = Quaternion.RotateTowards(spaceShip.transform.rotation, shipTiltLeft, tiltDegree);
+                spaceShip.transform.rotation = Quaternion.RotateTowards(spaceShip.transform.rotation,
+                    shipTiltLeft, tiltDegree);
             }
             else
             {
-                spaceShip.transform.rotation = Quaternion.Slerp(spaceShip.transform.rotation, shipCenter, tiltSpeed);
+                spaceShip.transform.rotation = Quaternion.Slerp(spaceShip.transform.rotation,
+                    shipCenter, tiltSpeed);
             }
 
-            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp), Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, -_xClamp, _xClamp),
+                Mathf.Clamp(transform.position.y, -_yClamp, _yClamp), 0);
         }
     }
 
@@ -98,33 +120,79 @@ public class PlayerController : MonoBehaviour
         playerLaserPrefab.SetActive(true);
     }
 
-    public void ShipSpeed(float newSpeed)
+    public void NewSpaceShip()
     {
-        shipSpeed = newSpeed;
+        if (shipMoving == true && Time.time > canSwitch)
+        {
+            canSwitch = Time.time + switchRate;
+
+            if (Input.GetKey(KeyCode.Tab))
+            {
+                Debug.Log("Ran Code");
+
+                SwitchSpaceShip(currentShip += 1);
+
+                if (currentShip >= lastShip)
+                {
+                    currentShip = firstShip;
+                    SwitchSpaceShip(currentShip);
+                }
+                /*else
+                {
+                    SwitchSpaceShip(currentShip += 1);
+                }*/
+            }
+        }
     }
 
-    public void ShipLaser(GameObject laserPrefab)
+    public void SwitchSpaceShip(int selectedShip)
     {
-        playerLaserPrefab = laserPrefab;
-    }
-
-    public void ShipLaserOrgiin(GameObject laserOrigin)
-    {
-        playerLaserOrigin = laserOrigin;
-    }
-
-    public void ShipLaserPool(int laserNumber)
-    {
-        poolNumber = laserNumber;
-    }
-
-    public void ShipCanFire(float newCanfire)
-    {
-        canFire = newCanfire;
-    }
-
-    public void ShipFireRate(float newFireRate)
-    {
-        fireRate = newFireRate;
+        switch (selectedShip)
+        {
+            case 0:
+                for (int i = 0; i < activeSpaceShips.Capacity; i++)
+                {
+                    activeSpaceShips[i].SetActive(false);
+                }
+                activeSpaceShips[0].SetActive(true);
+                poolNumber = spaceShipsList[0].poolNumber;
+                shipSpeed = spaceShipsList[0].speed;
+                playerLaserPrefab = spaceShipsList[0].laserPrefab;
+                playerLaserOrigin = spaceShipsList[0].laserOrigin;
+                canFire = spaceShipsList[0].canFire;
+                fireRate = spaceShipsList[0].fireRate;
+                currentShip = 0;
+                break;
+            case 1:
+                for (int i = 0; i < activeSpaceShips.Capacity; i++)
+                {
+                    activeSpaceShips[i].SetActive(false);
+                }
+                activeSpaceShips[1].SetActive(true);
+                poolNumber = spaceShipsList[1].poolNumber;
+                shipSpeed = spaceShipsList[1].speed;
+                playerLaserPrefab = spaceShipsList[1].laserPrefab;
+                playerLaserOrigin = spaceShipsList[1].laserOrigin;
+                canFire = spaceShipsList[1].canFire;
+                fireRate = spaceShipsList[1].fireRate;
+                currentShip = 1;
+                break;
+            case 2:
+                for (int i = 0; i < activeSpaceShips.Capacity; i++)
+                {
+                    activeSpaceShips[i].SetActive(false);
+                }
+                activeSpaceShips[2].SetActive(true);
+                poolNumber = spaceShipsList[2].poolNumber;
+                shipSpeed = spaceShipsList[2].speed;
+                playerLaserPrefab = spaceShipsList[2].laserPrefab;
+                playerLaserOrigin = spaceShipsList[2].laserOrigin;
+                canFire = spaceShipsList[2].canFire;
+                fireRate = spaceShipsList[2].fireRate;
+                currentShip = 2;
+                break;
+            default:
+                break;
+        }
     }
 }

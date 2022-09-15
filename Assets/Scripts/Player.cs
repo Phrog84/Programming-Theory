@@ -9,8 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private PlayerController playerController;
 
-    [SerializeField]
-    private bool gameStarted = false;
+    public bool gameStarted = false;
 
     // Start is called before the first frame update
     void Start()

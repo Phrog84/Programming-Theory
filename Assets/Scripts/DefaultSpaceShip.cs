@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class DefaultSpaceShip : SpaceShip
 {
-    private void Awake()
+    /*private void Awake()
     {
         SetShipSpeed();
+        SetCurrentShip();
         SetShipLaserPrefab();
         SetShipLaserOrgin();
         SetPoolNumber();
         SetShipCanFire();
         SetShipFireRate();
-    }
+    }*/
 
 }

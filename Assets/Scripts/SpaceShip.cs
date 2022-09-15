@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class SpaceShip : MonoBehaviour
 {
-    public PlayerController playerController;
+
+    #region Old Code
+    /*public PlayerController playerController;
+    public UIManager uIManager;
 
     public float speed;
 
@@ -15,6 +18,11 @@ public class SpaceShip : MonoBehaviour
     public float fireRate;
 
     public int poolNumber;
+
+    public virtual void SetCurrentShip()
+    {
+        playerController.CurrentSpaceShip(poolNumber);
+    }
 
     public virtual void SetShipSpeed()
     {
@@ -44,5 +52,7 @@ public class SpaceShip : MonoBehaviour
     public virtual void SetShipFireRate()
     {
         playerController.ShipFireRate(fireRate);
-    }
+    }*/
+
+    #endregion
 }
