@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
     private UIManager uIManager;
     [SerializeField]
     private PlayerController playerController;
+    [SerializeField]
+    private SpawnManager spawnManager;
+    [SerializeField]
+    private Animator playerAnim;
 
     public bool gameStarted = false;
 
@@ -22,5 +26,6 @@ public class Player : MonoBehaviour
         gameStarted = true;
         uIManager.GameStarted();
         playerController.GameStarted();
+        spawnManager.GameStarted();
     }
 }

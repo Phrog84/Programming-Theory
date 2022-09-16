@@ -45,8 +45,13 @@ public class PlayerController : MonoBehaviour
     private float tiltDirection = 45f;
     private float canSwitch = -.1f;
     private float switchRate = .5f;
-
     public bool shipMoving = false;
+
+    [SerializeField]
+    private Animator controllerAnim;
+    private bool topViewCamOn = true;
+    private float camSwitch = -.2f;
+    private float camRate = .4f;
 
     private void Start()
     {
@@ -54,7 +59,7 @@ public class PlayerController : MonoBehaviour
         shipMoving = false;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         MoveSpaceShip();
         FireLaser();
@@ -120,6 +125,25 @@ public class PlayerController : MonoBehaviour
         playerLaserPrefab.SetActive(true);
     }
 
+    public void SwitchCamera()
+    {
+        if (Time.time > camSwitch && shipMoving == true)
+        {
+            canSwitch = Time.time + camRate;
+
+            if (topViewCamOn)
+            {
+                controllerAnim.SetTrigger("FPVCam");
+            }
+            else
+            {
+                controllerAnim.SetTrigger("TopViewCam");
+            }
+            topViewCamOn = !topViewCamOn;
+        }
+    }
+
+
     public void NewSpaceShip()
     {
         if (shipMoving == true && Time.time > canSwitch)
@@ -128,8 +152,6 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Tab))
             {
-                Debug.Log("Ran Code");
-
                 SwitchSpaceShip(currentShip += 1);
 
                 if (currentShip >= lastShip)
@@ -137,10 +159,6 @@ public class PlayerController : MonoBehaviour
                     currentShip = firstShip;
                     SwitchSpaceShip(currentShip);
                 }
-                /*else
-                {
-                    SwitchSpaceShip(currentShip += 1);
-                }*/
             }
         }
     }

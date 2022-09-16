@@ -4,28 +4,30 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    private float enemySpeed = 10f;
+    public float enemySpeed;
+    public float enemySpinSpeed;
 
-    [SerializeField]
-    private GameObject enemyShape;
+    public GameObject enemyShape;
 
     private readonly string enemyReset = "EnemyReset";
     private readonly string laser = "Laser";
 
-    private Vector3 direction = new Vector3(0, -1, 0);
+    public Vector3 direction = new Vector3(0, -1, 0);
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        EnemyMove();
+        Move();
     }
 
-    public virtual void EnemyMove()
+    public virtual void Move()
     {
         transform.Translate(direction * enemySpeed * Time.fixedDeltaTime);
+    }
 
-        enemyShape.transform.rotation = Quaternion.Euler(45, 0, 45);
+    public virtual void EnemyAttack()
+    {
+        
     }
 
     public void OnTriggerEnter(Collider other)
@@ -36,8 +38,13 @@ public class Enemy : MonoBehaviour
         }
         if (other.CompareTag(laser))
         {
-            gameObject.SetActive(false);
+            EnemyHit();
         }
+    }
+
+    public virtual void EnemyHit()
+    {
+        gameObject.SetActive(false);
     }
 
 }
