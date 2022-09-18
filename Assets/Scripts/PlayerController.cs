@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
 
     private readonly string hor = "Horizontal";
     private readonly string ver = "Vertical";
+    private readonly string vFPV = "FPVCam";
+    private readonly string vTopV = "TopViewCam";
 
     public int currentShip;
     private readonly int firstShip = 0;
@@ -40,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private readonly float tiltSpeed = .4f;
     private readonly int tiltDegree = 45;
-    private readonly float _xClamp = 9;
+    private readonly float _xClamp = 12;
     private readonly float _yClamp = 5;
     private float tiltDirection = 45f;
     private float canSwitch = -.1f;
@@ -133,11 +135,11 @@ public class PlayerController : MonoBehaviour
 
             if (topViewCamOn)
             {
-                controllerAnim.SetTrigger("FPVCam");
+                controllerAnim.SetTrigger(vFPV);
             }
             else
             {
-                controllerAnim.SetTrigger("TopViewCam");
+                controllerAnim.SetTrigger(vTopV);
             }
             topViewCamOn = !topViewCamOn;
         }

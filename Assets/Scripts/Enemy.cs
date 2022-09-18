@@ -6,8 +6,12 @@ public class Enemy : MonoBehaviour
 {
     public float enemySpeed;
     public float enemySpinSpeed;
+    public float canFire = -7f;
+    public float fireRate = 2f;
 
     public GameObject enemyShape;
+    public GameObject enemyLaserPrefab;
+    public GameObject enemyLaserOrigin;
 
     private readonly string enemyReset = "EnemyReset";
     private readonly string laser = "Laser";
@@ -18,6 +22,7 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+        EnemyAttack();
     }
 
     public virtual void Move()

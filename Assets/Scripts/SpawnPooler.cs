@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(1000)]
 public class SpawnPooler : MonoBehaviour
 {
     public static SpawnPooler spawnPooler;
@@ -23,13 +24,20 @@ public class SpawnPooler : MonoBehaviour
     [SerializeField]
     private GameObject enemyContainer;
     [SerializeField]
-    private int enemyAmount;
+    private int enemyAsteroidAmount;
+    [SerializeField]
+    private int enemyAttackerAmount;
+    [SerializeField]
+    private int enemyLaserAmount;
     private List<GameObject> enemyPoolAsteroid;
     [SerializeField]
     private GameObject prefabEnemyAsteroid;
     private List<GameObject> enemyPoolAttacker;
     [SerializeField]
     private GameObject prefabEnemyAttacker;
+    private List<GameObject> enemyPoolLaser;
+    [SerializeField]
+    private GameObject prefabEnemyLaser;
 
     private void Awake()
     {
@@ -37,10 +45,6 @@ public class SpawnPooler : MonoBehaviour
         {
             spawnPooler = this;
         }
-    }
-
-    private void Start()
-    {
         LaserPool();
         EnemyPool();
     }
@@ -56,6 +60,7 @@ public class SpawnPooler : MonoBehaviour
     {
         PoolEnemyAsteroid();
         PoolEnemyAttacker();
+        PoolEnemyLaser();
     }
 
     private void PoolDefalutLaser()
@@ -101,7 +106,7 @@ public class SpawnPooler : MonoBehaviour
     {
         enemyPoolAsteroid = new List<GameObject>();
 
-        for (int i = 0; i < enemyAmount; i++)
+        for (int i = 0; i < enemyAsteroidAmount; i++)
         {
             GameObject obj = Instantiate(prefabEnemyAsteroid);
             obj.SetActive(false);
@@ -114,11 +119,24 @@ public class SpawnPooler : MonoBehaviour
     {
         enemyPoolAttacker = new List<GameObject>();
 
-        for (int i = 0; i < enemyAmount; i++)
+        for (int i = 0; i < enemyAttackerAmount; i++)
         {
             GameObject obj = Instantiate(prefabEnemyAttacker);
             obj.SetActive(false);
             enemyPoolAttacker.Add(obj);
+            obj.transform.SetParent(enemyContainer.transform);
+        }
+    }
+
+    private void PoolEnemyLaser()
+    {
+        enemyPoolLaser = new List<GameObject>();
+
+        for (int i = 0; i < enemyLaserAmount; i++)
+        {
+            GameObject obj = Instantiate(prefabEnemyLaser);
+            obj.SetActive(false);
+            enemyPoolLaser.Add(obj);
             obj.transform.SetParent(enemyContainer.transform);
         }
     }
@@ -179,6 +197,26 @@ public class SpawnPooler : MonoBehaviour
                     if (!enemyPoolAttacker[i].activeInHierarchy)
                     {
                         return enemyPoolAttacker[i];
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        return null;
+    }
+
+    public GameObject PooledEnemyLaser(int poolNumber)
+    {
+        switch (poolNumber)
+        {
+            case 0:
+                for (int i = 0; i < enemyPoolLaser.Count; i++)
+                {
+                    if (!enemyPoolLaser[i].activeInHierarchy)
+                    {
+                        return enemyPoolLaser[i];
                     }
                 }
                 break;

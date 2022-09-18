@@ -108,7 +108,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3451569734135507869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.6}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 3451569734622594299}
   m_Layer: 0
   m_Name: SpaceShipEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,8 +164,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 0
   enemySpinSpeed: 0
+  canFire: -7
+  fireRate: 2.5
   enemyShape: {fileID: 3451569733220072497}
+  enemyLaserPrefab: {fileID: 8427870539483568179, guid: bc63ee051005c4c9bbc4672f4c30bb0e, type: 3}
+  enemyLaserOrigin: {fileID: 3451569734135507869}
   direction: {x: 0, y: -1, z: 0}
+  offsetAmount: 1.2
+  enemySpanwed: 0
 --- !u!54 &3451569734622594298
 Rigidbody:
   m_ObjectHideFlags: 0
